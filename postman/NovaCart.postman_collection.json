@@ -1,0 +1,14 @@
+{
+  "info": {"name":"NovaCart WEB303","schema":"https://schema.getpostman.com/json/collection/v2.1.0/collection.json"},
+  "item": [
+    {"name":"Create Product P001","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"id\":\"P001\",\"name\":\"Laptop\",\"price\":75000,\"description\":\"Student laptop\"}"},"url":"http://localhost:8080/products"}},
+    {"name":"List Products","request":{"method":"GET","url":"http://localhost:8080/products"}},
+    {"name":"Get Product P001","request":{"method":"GET","url":"http://localhost:8080/products/P001"}},
+    {"name":"Update Product P001","request":{"method":"PUT","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"name\":\"Laptop Updated\",\"price\":76000,\"description\":\"Updated product\"}"},"url":"http://localhost:8080/products/P001"}},
+    {"name":"Create Order O001","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"id\":\"O001\",\"product_id\":\"P001\",\"quantity\":2,\"status\":\"CREATED\"}"},"url":"http://localhost:8080/orders"}},
+    {"name":"List Orders","request":{"method":"GET","url":"http://localhost:8080/orders"}},
+    {"name":"Get Order O001","request":{"method":"GET","url":"http://localhost:8080/orders/O001"}},
+    {"name":"Delete Order O001","request":{"method":"DELETE","url":"http://localhost:8080/orders/O001"}},
+    {"name":"Delete Product P001","request":{"method":"DELETE","url":"http://localhost:8080/products/P001"}}
+  ]
+}

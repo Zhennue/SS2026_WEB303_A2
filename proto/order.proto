@@ -1,0 +1,17 @@
+syntax = "proto3";
+package novacart;
+option go_package = "novacart/proto;proto";
+import "proto/product.proto";
+
+// OrderService is Service A. It owns orders and calls ProductService (Service B).
+service OrderService {
+  rpc CreateOrder(Order) returns (Order);
+  rpc GetOrder(OrderID) returns (Order);
+  rpc ListOrders(Empty) returns (OrderList);
+  rpc UpdateOrder(Order) returns (Order);
+  rpc DeleteOrder(OrderID) returns (DeleteResponse);
+}
+message OrderID { string id = 1; }
+// product_name is NOT stored in order-db. It is fetched from Product Service when an order is retrieved.
+message Order { string id = 1; string product_id = 2; int32 quantity = 3; string status = 4; double total = 5; string product_name = 6; }
+message OrderList { repeated Order orders = 1; }

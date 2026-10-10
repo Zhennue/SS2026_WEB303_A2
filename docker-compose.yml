@@ -1,0 +1,56 @@
+services:
+  product-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: nova
+      POSTGRES_PASSWORD: nova_password
+      POSTGRES_DB: products
+    ports: ["5433:5432"]
+    volumes: [product_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nova -d products"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  order-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: nova
+      POSTGRES_PASSWORD: nova_password
+      POSTGRES_DB: orders
+    ports: ["5434:5432"]
+    volumes: [order_data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nova -d orders"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+  product-service:
+    build: { context: ., dockerfile: Dockerfile.product }
+    environment:
+      PRODUCT_DATABASE_URL: postgres://nova:nova_password@product-db:5432/products?sslmode=disable
+      PRODUCT_GRPC_PORT: "50051"
+    depends_on:
+      product-db: { condition: service_healthy }
+    ports: ["50051:50051"]
+  order-service:
+    build: { context: ., dockerfile: Dockerfile.order }
+    environment:
+      ORDER_DATABASE_URL: postgres://nova:nova_password@order-db:5432/orders?sslmode=disable
+      ORDER_GRPC_PORT: "50052"
+      PRODUCT_GRPC_ADDR: product-service:50051
+    depends_on:
+      order-db: { condition: service_healthy }
+      product-service: { condition: service_started }
+    ports: ["50052:50052"]
+  gateway:
+    build: { context: ., dockerfile: Dockerfile.gateway }
+    environment:
+      GATEWAY_PORT: "8080"
+      PRODUCT_GRPC_ADDR: product-service:50051
+      ORDER_GRPC_ADDR: order-service:50052
+    depends_on: [product-service, order-service]
+    ports: ["8080:8080"]
+volumes:
+  product_data:
+  order_data:
