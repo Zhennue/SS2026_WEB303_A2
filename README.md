@@ -1,4 +1,4 @@
-# NovaCart - WEB303 Assignment 1
+# NovaCart - WEB303 Assignment 2
 
 Two collaborating Go microservices: Product Service (Service B) and Order Service (Service A), exposed through a REST API Gateway. Each service owns a separate PostgreSQL database. Internal service communication uses gRPC/Protocol Buffers.
 
